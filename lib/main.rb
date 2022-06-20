@@ -40,6 +40,13 @@ class Game
         invalid = true
       end
     end
+    if input == "y"
+      @code_breaker = human_player
+      @coder = computer_player
+    else
+      @code_breaker = computer_player
+      @coder = human_player
+    end
   end
 
   private
