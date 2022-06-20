@@ -6,10 +6,6 @@ class Player
 
   attr_accessor :name
 
-  def initialize
-    @wins = 0
-  end
-
 end
 
 class Human < Player

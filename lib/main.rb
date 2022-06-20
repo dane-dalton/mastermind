@@ -17,6 +17,8 @@ class Game
 
   def play
     puts "Welcome to Mastermind! You'll be facing up against a robot."
+    human_player.choose_name
+
   end
 
   def choose_code(player)
@@ -24,6 +26,19 @@ class Game
       set_code_computer
     else
       set_code_human
+    end
+  end
+
+  def choose_role
+    invalid = true
+    while invalid
+      invalid = false
+      puts "Would you like to be the code breaker? (y/n)"
+      input = gets.chomp.downcase
+      unless input == "y" || input == "n"
+        Game.invalid_input
+        invalid = true
+      end
     end
   end
 
@@ -61,6 +76,6 @@ class Game
     end
 
     def self.invalid_input
-      p "Error. Please select a color available."
+      p "Error. Invalid input."
     end
 end
