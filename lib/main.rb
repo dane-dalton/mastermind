@@ -4,11 +4,14 @@ require_relative 'player.rb'
 class Game
   include Board
 
+  attr_reader :code_length
+
   attr_accessor :free_colors, :code_breaker, :coder
 
   def initialize()
     @free_colors = COLOR_OPTIONS.clone
-    @code = Array.new(4)
+    @code = []
+    @code_length = 4
     @human_player = Human.new
     @computer_player = Computer.new
     @code_breaker = nil
@@ -19,8 +22,8 @@ class Game
     puts "Welcome to Mastermind! You'll be facing up against a robot."
     @human_player.choose_name
     choose_role
-    p self.code_breaker
-    p self.coder
+    choose_code(self.coder)
+    p self.code
 
   end
 
@@ -53,26 +56,22 @@ class Game
   end
 
   private
-    def code
-      @code
-    end
+    attr_accessor :code
 
     def set_code_computer
       free_color_counter = 6
-      @code.each do |color|
+      self.code_length.times do
         color_pick = rand(free_color_counter)
-        @code[color] = self.free_colors.delete_at(color_pick)
-
+        self.code.push(self.free_colors.delete_at(color_pick))
         free_color_counter -= 1
       end
-      @code
     end
 
     def set_code_human
-      @code.each do |color|
+      self.code_length.times do
         invalid = true
         while invalid do 
-          puts "Select a color for your code with the following options:"
+          puts "\nSelect a color for your code with the following options:"
           puts "#{self.free_colors.join(", ")}"
           color = gets.chomp.capitalize
           self.free_colors.each do |free|
@@ -80,15 +79,25 @@ class Game
           end
           Game.invalid_input if invalid == true
         end
-        self.free_colors.delete(color)
+        self.code.push(self.free_colors.delete(color))
       end
-      @code
     end
 
     def self.invalid_input
-      p "Error. Invalid input."
+      p "\nError. Invalid input."
     end
 end
+
+# color_list = ["Red", "Blue", "Orange", "Yellow", "Green"]
+# array = []
+# free_color_counter = color_list.length
+# 4.times do
+#   color_pick = rand(free_color_counter)
+#   free_color_counter -= 1
+#   array.push(color_list.delete_at(color_pick))
+# end
+# p array
+
 
 game = Game.new
 game.play
