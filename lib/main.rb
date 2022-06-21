@@ -6,13 +6,15 @@ class Game
 
   attr_reader :code_length
 
-  attr_accessor :free_colors, :code_breaker, :coder
+  attr_accessor :free_colors, :code_breaker, :coder, :guess_storage
 
   def initialize()
     @free_colors = nil
     @code = []
     @code_length = 4
     @guess = []
+    @guess_storage = []
+    @rounds = 10
     @human_player = Human.new
     @computer_player = Computer.new
     @code_breaker = nil
@@ -25,13 +27,20 @@ class Game
     choose_role
     choose_code(self.coder)
     p self.code
-    choose_guess(self.code_breaker)
-    p self.guess
+    start_guesses
 
   end
 
+  def start_guesses
+    self.rounds.times do
+      choose_guess(self.code_breaker)
+      self.guess_storage.push(self.guess)
+      code_breaker_display(self.guess_storage, "") #from Board module
+    end
+  end
+
   private
-    attr_accessor :code, :guess
+    attr_accessor :code, :guess, :rounds
 
     def choose_role
       invalid = true

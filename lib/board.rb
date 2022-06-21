@@ -6,13 +6,14 @@ module Board
 
   def code_breaker_display(guesses, pegs)
     puts "\n\n"
+    puts "Guess #{guesses.length}/10\n"
     guesses.each do |round|
-      print "|"
+      print "\n| "
       round.each do |guess|
-        print guess + "|"
+        print guess + " | "
       end
-      print " pegs\n"
+      print "pegs\n"
     end
-    puts "\n\n"
+    puts "\n"
   end
 end
