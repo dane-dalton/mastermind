@@ -4,10 +4,10 @@ require_relative 'player.rb'
 class Game
   include Board
 
-  attr_accessor :free_colors
+  attr_accessor :free_colors, :code_breaker, :coder
 
   def initialize()
-    @free_colors = color_options.clone
+    @free_colors = COLOR_OPTIONS.clone
     @code = Array.new(4)
     @human_player = Human.new
     @computer_player = Computer.new
@@ -17,7 +17,10 @@ class Game
 
   def play
     puts "Welcome to Mastermind! You'll be facing up against a robot."
-    human_player.choose_name
+    @human_player.choose_name
+    choose_role
+    p self.code_breaker
+    p self.coder
 
   end
 
@@ -41,11 +44,11 @@ class Game
       end
     end
     if input == "y"
-      @code_breaker = human_player
-      @coder = computer_player
+      self.code_breaker = @human_player
+      self.coder = @computer_player
     else
-      @code_breaker = computer_player
-      @coder = human_player
+      self.code_breaker = @computer_player
+      self.coder = @human_player
     end
   end
 
@@ -58,7 +61,7 @@ class Game
       free_color_counter = 6
       @code.each do |color|
         color_pick = rand(free_color_counter)
-        @code[color] = @free_colors.delete_at(color_pick)
+        @code[color] = self.free_colors.delete_at(color_pick)
 
         free_color_counter -= 1
       end
@@ -70,14 +73,14 @@ class Game
         invalid = true
         while invalid do 
           puts "Select a color for your code with the following options:"
-          puts "#{@free_colors.join(", ")}"
+          puts "#{self.free_colors.join(", ")}"
           color = gets.chomp.capitalize
-          @free_colors.each do |free|
+          self.free_colors.each do |free|
             invalid = false if color == free
           end
           Game.invalid_input if invalid == true
         end
-        @free_colors.delete(color)
+        self.free_colors.delete(color)
       end
       @code
     end
@@ -86,3 +89,6 @@ class Game
       p "Error. Invalid input."
     end
 end
+
+game = Game.new
+game.play

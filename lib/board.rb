@@ -1,8 +1,8 @@
 module Board 
 
-  color_options = ["Red", "Blue", "Green", "Yellow", "Violet", "Orange"]
+  COLOR_OPTIONS = ["Red", "Blue", "Green", "Yellow", "Violet", "Orange"]
 
-  indicator_pegs = ["Black", "White"]
+  INDICATOR_PEGS = ["Black", "White"]
 
   def code_breaker_display(guesses, pegs)
     puts "\n\n"
