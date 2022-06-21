@@ -1,8 +1,9 @@
-require_relative 'board.rb'
+require_relative 'modules.rb'
 require_relative 'player.rb'
 
 class Game
   include Board
+  include RepetitivePrompts
 
   attr_reader :code_length
 
@@ -24,13 +25,12 @@ class Game
   end
 
   def play
-    puts "Welcome to Mastermind! You'll be facing up against a robot."
+    puts "\nWelcome to Mastermind! You'll be facing up against a robot."
     @human_player.choose_name
     choose_role
     choose_code(self.coder)
-    p self.code
     start_guesses
-
+    coder_winner unless check_winner?
   end
 
   def start_guesses
@@ -40,24 +40,23 @@ class Game
       self.guess_storage.push(self.guess)
       self.correct_storage.push(self.correct_counter)
       code_breaker_display(self.guess_storage, self.correct_storage) #from Board module
-      #check_winner?
+      if check_winner?
+        input = y_n("code breaker")
+        play_again(input)
+        break
+      end
     end
+  end
+
+  def self.invalid_input
+    puts "\nError. Invalid input."
   end
 
   private
     attr_accessor :code, :guess, :rounds
 
     def choose_role
-      invalid = true
-      while invalid
-        invalid = false
-        puts "Would you like to be the code breaker? (y/n)"
-        input = gets.chomp.downcase
-        unless input == "y" || input == "n"
-          Game.invalid_input
-          invalid = true
-        end
-      end
+      input = y_n("role")
       if input == "y"
         self.code_breaker = @human_player
         self.coder = @computer_player
@@ -105,7 +104,7 @@ class Game
             puts "\nCurrent guess: #{array}"
             puts "\n#{@human_player.name}'s turn to select a color for your guess from the following list:"
           end
-          puts "#{self.free_colors.join(", ")}"
+          puts "#{self.free_colors.join(", ")}\n"
           color = gets.chomp.capitalize
           self.free_colors.each do |free|
             invalid = false if color == free
@@ -131,7 +130,7 @@ class Game
 
     def get_number_correct
       self.correct_counter = self.code.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
-        peg_obj[INDICATOR_PEGS[0]] ||= 0
+        peg_obj[INDICATOR_PEGS[0]] ||= 0 #from Board module
         peg_obj[INDICATOR_PEGS[1]] ||= 0
         self.guess.each_with_index do |guess_color, j|
           if (code_color == guess_color && i == j)
@@ -144,8 +143,20 @@ class Game
       end
     end
 
-    def self.invalid_input
-      p "\nError. Invalid input."
+    def check_winner?
+      self.correct_counter[INDICATOR_PEGS[0]] == 4
+    end
+
+    def coder_winner
+      input = y_n("coder")
+      play_again(input)
+    end
+
+    def play_again(y_or_n)
+      if y_or_n == "y"
+        game = Game.new
+        game.play
+      end
     end
 end
 
