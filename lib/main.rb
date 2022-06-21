@@ -3,7 +3,7 @@ require_relative 'player.rb'
 
 class Game
   include Board
-  include RepetitivePrompts
+  include Prompts
 
   attr_reader :code_length
 
@@ -33,6 +33,7 @@ class Game
     coder_winner unless check_winner?
   end
 
+  #Starts the guessing period for the code breaker. Runs the set amount of rounds.
   def start_guesses
     self.rounds.times do
       choose_guess(self.code_breaker)
@@ -53,6 +54,7 @@ class Game
   end
 
   private
+
     attr_accessor :code, :guess, :rounds
 
     def choose_role
@@ -92,27 +94,11 @@ class Game
       end
     end
 
+    #Setting the code and guessing the code are similar, so this method fills an array and assigns it to either the code or the guess depending on the users role
     def set_human
       self.free_colors = COLOR_OPTIONS.clone
       array = []
-      self.code_length.times do
-        invalid = true
-        while invalid do 
-          unless self.code.length == code_length
-            puts "\n#{@human_player.name}'s turn to create a code by selecting from the list of colors:"
-          else
-            puts "\nCurrent guess: #{array}"
-            puts "\n#{@human_player.name}'s turn to select a color for your guess from the following list:"
-          end
-          puts "#{self.free_colors.join(", ")}\n"
-          color = gets.chomp.capitalize
-          self.free_colors.each do |free|
-            invalid = false if color == free
-          end
-          Game.invalid_input if invalid == true
-        end
-        array.push(self.free_colors.delete(color))
-      end
+      get_human_array(array) #from Prompt module
       return array.clone
     end
 
@@ -128,6 +114,7 @@ class Game
       end
     end
 
+    #Create a hash counter to get the 'correct pins' using Array.reduce
     def get_number_correct
       self.correct_counter = self.code.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
         peg_obj[INDICATOR_PEGS[0]] ||= 0 #from Board module

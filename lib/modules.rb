@@ -19,7 +19,7 @@ module Board
   end
 end
 
-module RepetitivePrompts
+module Prompts
 
   input = nil
 
@@ -43,5 +43,27 @@ module RepetitivePrompts
       end
     end
     return input
+  end
+
+  def get_human_array(array)
+    self.code_length.times do
+      invalid = true
+      while invalid do 
+        unless self.code.length == code_length
+          puts "\n#{@human_player.name}'s turn to create a code by selecting from the list of colors:"
+        else
+          puts "\nCurrent guess: #{array}"
+          puts "\n#{@human_player.name}'s turn to select a color for your guess from the following list:"
+        end
+        puts "#{self.free_colors.join(", ")}\n"
+        color = gets.chomp.capitalize
+        self.free_colors.each do |free|
+          invalid = false if color == free
+        end
+        Game.invalid_input if invalid == true
+      end
+      array.push(self.free_colors.delete(color))
+    end
+    return array
   end
 end
