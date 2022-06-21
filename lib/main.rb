@@ -9,10 +9,10 @@ class Game
   attr_accessor :free_colors, :code_breaker, :coder
 
   def initialize()
-    @free_colors = COLOR_OPTIONS.clone
+    @free_colors = nil
     @code = []
     @code_length = 4
-    @guess = nil
+    @guess = []
     @human_player = Human.new
     @computer_player = Computer.new
     @code_breaker = nil
@@ -24,7 +24,8 @@ class Game
     @human_player.choose_name
     choose_role
     choose_code(self.coder)
-    code_guessing(self.code_breaker)
+    p self.code
+    choose_guess(self.code_breaker)
     p self.guess
 
   end
@@ -56,11 +57,20 @@ class Game
       if player.name == "Computer"
         set_code_computer
       else
-        set_code_human
+        self.code = set_human
+      end
+    end
+
+    def choose_guess(player)
+      if player.name == "Computer"
+        set_guess_computer
+      else
+        self.guess = set_human
       end
     end
 
     def set_code_computer
+      self.free_colors = COLOR_OPTIONS.clone
       free_color_counter = 6
       self.code_length.times do
         color_pick = rand(free_color_counter)
@@ -69,11 +79,18 @@ class Game
       end
     end
 
-    def set_code_human
+    def set_human
+      self.free_colors = COLOR_OPTIONS.clone
+      array = []
       self.code_length.times do
         invalid = true
         while invalid do 
-          puts "\nSelect a color for your code with the following options:"
+          unless self.code.length == code_length
+            puts "\nSelect a color for your code with the following options:"
+          else
+            puts "\nCurrent guess: #{array}"
+            puts "\nSelect a color for your guess with the following options:"
+          end
           puts "#{self.free_colors.join(", ")}"
           color = gets.chomp.capitalize
           self.free_colors.each do |free|
@@ -81,16 +98,9 @@ class Game
           end
           Game.invalid_input if invalid == true
         end
-        self.code.push(self.free_colors.delete(color))
+        array.push(self.free_colors.delete(color))
       end
-    end
-
-    def code_guessing(player)
-      if player.name == "Computer"
-        set_guess_computer
-      else
-        set_guess_human
-      end
+      return array.clone
     end
 
     #Computer takes random guesses for now
@@ -109,16 +119,6 @@ class Game
       p "\nError. Invalid input."
     end
 end
-
-# color_list = ["Red", "Blue", "Orange", "Yellow", "Green"]
-# array = []
-# free_color_counter = color_list.length
-# 4.times do
-#   color_pick = rand(free_color_counter)
-#   free_color_counter -= 1
-#   array.push(color_list.delete_at(color_pick))
-# end
-# p array
 
 
 game = Game.new
