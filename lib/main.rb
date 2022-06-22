@@ -7,10 +7,9 @@ class Game
 
   attr_reader :code_length
 
-  attr_accessor :free_colors, :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage
+  attr_accessor :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage
 
   def initialize()
-    @free_colors = nil
     @code = []
     @code_length = 4
     @guess = []
@@ -85,18 +84,14 @@ class Game
     end
 
     def set_code_computer
-      self.free_colors = COLOR_OPTIONS.clone
-      free_color_counter = 6
       self.code_length.times do
-        color_pick = rand(free_color_counter)
-        self.code.push(self.free_colors.delete_at(color_pick))
-        free_color_counter -= 1
+        color_pick = rand(COLOR_OPTIONS.length)
+        self.code.push(COLOR_OPTIONS[color_pick])
       end
     end
 
     #Setting the code and guessing the code are similar, so this method fills an array and assigns it to either the code or the guess depending on the users role
     def set_human
-      self.free_colors = COLOR_OPTIONS.clone
       array = []
       get_human_array(array) #from Prompt module
       return array.clone
@@ -104,26 +99,39 @@ class Game
 
     #Computer takes random guesses for now
     def set_guess_computer
-      self.free_colors = COLOR_OPTIONS.clone
       self.guess = []
-      free_color_counter = 6
       self.code_length.times do
-        color_pick = rand(free_color_counter)
-        self.guess.push(self.free_colors.delete_at(color_pick))
-        free_color_counter -= 1
+        color_pick = rand(COLOR_OPTIONS.length)
+        self.guess.push(COLOR_OPTIONS[color_pick])
       end
     end
 
     #Create a hash counter to get the 'correct pins' using Array.reduce
     def get_number_correct
+      temp_guess = self.guess.clone
+      temp_code = self.code.clone
+      temp_removed = 0
+
+      #Check correct color and position
       self.correct_counter = self.code.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
         peg_obj[INDICATOR_PEGS[0]] ||= 0 #from Board module
         peg_obj[INDICATOR_PEGS[1]] ||= 0
-        self.guess.each_with_index do |guess_color, j|
-          if (code_color == guess_color && i == j)
-            peg_obj[INDICATOR_PEGS[0]] += 1
-          elsif (code_color == guess_color)
-            peg_obj[INDICATOR_PEGS[1]] += 1 
+        if code_color == self.guess[i]
+          peg_obj[INDICATOR_PEGS[0]] += 1
+          temp_guess.delete_at(i - temp_removed)
+          temp_code.delete_at(i - temp_removed)
+          temp_removed += 1
+        end
+        peg_obj
+      end
+
+      #Check correct color
+      self.correct_counter = temp_code.each_with_index.reduce(self.correct_counter) do |peg_obj, (code_color, i)|
+        temp_guess.each_with_index do |guess_color, j|
+          if code_color == guess_color
+            peg_obj[INDICATOR_PEGS[1]] += 1
+            temp_guess.delete_at(j)
+            break
           end
         end
         peg_obj

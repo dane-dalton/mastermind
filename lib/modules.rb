@@ -20,6 +20,7 @@ module Board
 end
 
 module Prompts
+  include Board
 
   input = nil
 
@@ -55,14 +56,19 @@ module Prompts
           puts "\nCurrent guess: #{array}"
           puts "\n#{@human_player.name}'s turn to select a color for your guess from the following list:"
         end
-        puts "#{self.free_colors.join(", ")}\n"
+        puts "#{COLOR_OPTIONS.join(", ")}\n"
         color = gets.chomp.capitalize
-        self.free_colors.each do |free|
-          invalid = false if color == free
+        color_index = nil
+        COLOR_OPTIONS.each_with_index do |valid_color, i|
+          if color == valid_color
+            invalid = false
+            color_index = i
+            break
+          end
         end
         Game.invalid_input if invalid == true
       end
-      array.push(self.free_colors.delete(color))
+      array.push(COLOR_OPTIONS[color_index])
     end
     return array
   end

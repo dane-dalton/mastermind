@@ -23,6 +23,13 @@ The rules don't read well, but the game is quite simple. It is a lot like wordle
 -Create more modules to clean up the Game class
 
 -Write an AI to play in the most optimal way and ideally win every game with the current code and game length
----Research the best ways to win in Mastermind
+---Research the best ways to win in Mastermind with the standard rule set (The current game rules)
 
 -Write the 'play' method in the Game class this time
+
+## Resources
+-A lecture by Adam Forsyth on solving logic games with Python was extremely helpful for my approach in creating an AI for the game since I have not written logic in this depth before
+---https://www.youtube.com/watch?v=2iCpnWYXPik 
+
+-Finding the maximum minimum (minimax) solutions yields the quickest results for Mastermind, and the Minimax wikipedia page was used for more information on this concept
+---https://en.wikipedia.org/wiki/Minimax#Pseudocode
