@@ -108,34 +108,7 @@ class Game
 
     #Create a hash counter to get the 'correct pins' using Array.reduce
     def get_number_correct
-      temp_guess = self.guess.clone
-      temp_code = self.code.clone
-      temp_removed = 0
-
-      #Check correct color and position
-      self.correct_counter = self.code.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
-        peg_obj[INDICATOR_PEGS[0]] ||= 0 #from Board module
-        peg_obj[INDICATOR_PEGS[1]] ||= 0
-        if code_color == self.guess[i]
-          peg_obj[INDICATOR_PEGS[0]] += 1
-          temp_guess.delete_at(i - temp_removed)
-          temp_code.delete_at(i - temp_removed)
-          temp_removed += 1
-        end
-        peg_obj
-      end
-
-      #Check correct color
-      self.correct_counter = temp_code.each_with_index.reduce(self.correct_counter) do |peg_obj, (code_color, i)|
-        temp_guess.each_with_index do |guess_color, j|
-          if code_color == guess_color
-            peg_obj[INDICATOR_PEGS[1]] += 1
-            temp_guess.delete_at(j)
-            break
-          end
-        end
-        peg_obj
-      end
+      colored_pegs
     end
 
     def check_winner?

@@ -17,6 +17,37 @@ module Board
     end
     puts "\n"
   end
+
+  def colored_pegs
+    temp_guess = self.guess.clone
+    temp_code = self.code.clone
+    temp_removed = 0
+
+    #Check correct color and position
+    self.correct_counter = self.code.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
+      peg_obj[INDICATOR_PEGS[0]] ||= 0 #from Board module
+      peg_obj[INDICATOR_PEGS[1]] ||= 0
+      if code_color == self.guess[i]
+        peg_obj[INDICATOR_PEGS[0]] += 1
+        temp_guess.delete_at(i - temp_removed)
+        temp_code.delete_at(i - temp_removed)
+        temp_removed += 1
+      end
+      peg_obj
+    end
+
+    #Check correct color
+    self.correct_counter = temp_code.each_with_index.reduce(self.correct_counter) do |peg_obj, (code_color, i)|
+      temp_guess.each_with_index do |guess_color, j|
+        if code_color == guess_color
+          peg_obj[INDICATOR_PEGS[1]] += 1
+          temp_guess.delete_at(j)
+          break
+        end
+      end
+      peg_obj
+    end
+  end
 end
 
 module Prompts
@@ -30,7 +61,7 @@ module Prompts
       invalid = false
       puts "\nWould you like to be the code breaker? (y/n)" if scenario == "role"
       if scenario == "code breaker"
-        puts "Congrats #{self.code_breaker.name}}, you've successfully guessed the code and won!\n\n"
+        puts "Congrats #{self.code_breaker.name}, you've successfully guessed the code and won!\n\n"
         puts "Would you like to play again? (y/n)"
       end
       if scenario == "coder"

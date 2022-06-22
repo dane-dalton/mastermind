@@ -9,9 +9,9 @@ The rules don't read well, but the game is quite simple. It is a lot like wordle
 
 -The Code Breaker will make a blind guess at the code to start and will recieve up to 4 Black or White pins that appear in no specific order
 
----Black pins: Each one is an indication that one of your guesses is correct and in the right location
+---Black pins: Each one is an indication that one of your guesses is correct and in the correct location
 
----White pins: Each one is an indication that one of your guesses is correct, but it is not in the right position
+---White pins: Each one is an indication that one of your guesses is correct, but it is not in the correct position
 
 -The Code Breaker gets 10 guesses to come up with the code, otherwise the Coder wins
 
