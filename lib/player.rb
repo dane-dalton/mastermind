@@ -15,4 +15,8 @@ class Computer < Player
   def initialize
     @name = "Computer"
   end
+
+  def best_move
+    
+  end
 end

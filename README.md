@@ -33,3 +33,9 @@ The rules don't read well, but the game is quite simple. It is a lot like wordle
 
 -Finding the maximum minimum (minimax) solutions yields the quickest results for Mastermind, and the Minimax wikipedia page was used for more information on this concept
 ---https://en.wikipedia.org/wiki/Minimax#Pseudocode
+
+-A video by Sebastian Lague explaining Minimax and alpha-beta pruning algorithms using a chess game as an example
+---https://www.youtube.com/watch?v=l-hh51ncgDI 
+
+-A video by The Coding Train implementing Minimax to a simpler game like Tic Tac Toe
+---https://www.youtube.com/watch?v=trKjYdBASyQ&t=1128s 

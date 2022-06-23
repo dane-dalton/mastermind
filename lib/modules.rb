@@ -1,5 +1,9 @@
 module Board 
 
+  CODE_LENGTH = 4
+
+  TOTAL_COMBINATIONS = COLOR_OPTIONS.repeated_permutation(CODE_LENGTH)
+
   COLOR_OPTIONS = ["Red", "Blue", "Green", "Yellow", "Violet", "Orange"]
 
   INDICATOR_PEGS = ["Black", "White"]
@@ -18,16 +22,16 @@ module Board
     puts "\n"
   end
 
-  def colored_pegs
-    temp_guess = self.guess.clone
-    temp_code = self.code.clone
+  def colored_pegs (guess_array, code_array)
+    temp_guess = guess_array
+    temp_code = code_array
     temp_removed = 0
 
     #Check correct color and position
-    self.correct_counter = self.code.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
+    self.correct_counter = code_array.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
       peg_obj[INDICATOR_PEGS[0]] ||= 0 #from Board module
       peg_obj[INDICATOR_PEGS[1]] ||= 0
-      if code_color == self.guess[i]
+      if code_color == guess_array[i]
         peg_obj[INDICATOR_PEGS[0]] += 1
         temp_guess.delete_at(i - temp_removed)
         temp_code.delete_at(i - temp_removed)
@@ -47,6 +51,10 @@ module Board
       end
       peg_obj
     end
+  end
+
+  def minimax(position, depth, maximizing_player)
+    
   end
 end
 

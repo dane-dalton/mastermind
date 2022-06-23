@@ -7,11 +7,11 @@ class Game
 
   attr_reader :code_length
 
-  attr_accessor :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage
+  attr_accessor :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage, :possible_codes, :unused_codes
 
   def initialize()
     @code = []
-    @code_length = 4
+    @code_length = CODE_LENGTH
     @guess = []
     @guess_storage = []
     @correct_counter = {}
@@ -21,6 +21,8 @@ class Game
     @computer_player = Computer.new
     @code_breaker = nil
     @coder = nil
+    @possible_codes = TOTAL_COMBINATIONS.clone #Total possible codes = 1296
+    @unused_codes = TOTAL_COMBINATIONS.clone
   end
 
   def play
@@ -36,7 +38,7 @@ class Game
   def start_guesses
     self.rounds.times do
       choose_guess(self.code_breaker)
-      get_number_correct
+      colored_pegs(self.guess, self.code) #gets number correct
       self.guess_storage.push(self.guess)
       self.correct_storage.push(self.correct_counter)
       code_breaker_display(self.guess_storage, self.correct_storage) #from Board module
@@ -100,15 +102,26 @@ class Game
     #Computer takes random guesses for now
     def set_guess_computer
       self.guess = []
-      self.code_length.times do
-        color_pick = rand(COLOR_OPTIONS.length)
-        self.guess.push(COLOR_OPTIONS[color_pick])
+      #First guess is always 1122
+      if self.guess_storage == []
+        self.guess = [COLOR_OPTIONS[0], COLOR_OPTIONS[0], COLOR_OPTIONS[1], COLOR_OPTIONS[1]]
+        self.unused_codes.delete(self.guess)
+        return self.guess
       end
-    end
 
-    #Create a hash counter to get the 'correct pins' using Array.reduce
-    def get_number_correct
-      colored_pegs
+      #Remove all possible codes that would not yield the same response as the guess if the guess were the code
+      temp_correct_counter = self.correct_counter
+      self.possible_codes.each do |combo|
+        colored_pegs(combo, self.guess)
+        unless temp_correct_counter == self.correct_counter
+          self.possible_codes.delete(combo)
+        end
+      end
+
+      best_score = -(1.0/0.0)
+
+      
+      minimax()
     end
 
     def check_winner?
