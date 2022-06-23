@@ -79,7 +79,7 @@ class Game
 
     def choose_guess(player)
       if player.name == "Computer"
-        set_guess_computer
+        self.guess = set_guess_computer(self.guess)
       else
         self.guess = set_human
       end
@@ -100,19 +100,19 @@ class Game
     end
 
     #Computer takes random guesses for now
-    def set_guess_computer
-      self.guess = []
+    def set_guess_computer(cpu_guess)
+      cpu_guess = []
       #First guess is always 1122
       if self.guess_storage == []
-        self.guess = [COLOR_OPTIONS[0], COLOR_OPTIONS[0], COLOR_OPTIONS[1], COLOR_OPTIONS[1]]
-        self.unused_codes.delete(self.guess)
-        return self.guess
+        cpu_guess = [COLOR_OPTIONS[0], COLOR_OPTIONS[0], COLOR_OPTIONS[1], COLOR_OPTIONS[1]]
+        self.unused_codes.delete(cpu_guess)
+        return cpu_guess
       end
 
       #Remove all possible codes that would not yield the same response as the guess if the guess were the code
-      temp_correct_counter = self.correct_counter
+      temp_correct_counter = self.correct_counter.clone
       self.possible_codes.each do |combo|
-        colored_pegs(combo, self.guess)
+        colored_pegs(combo, cpu_guess)
         unless temp_correct_counter == self.correct_counter
           self.possible_codes.delete(combo)
         end
@@ -120,8 +120,14 @@ class Game
 
       best_score = -(1.0/0.0)
 
-      
-      minimax()
+      self.unused_codes.each do |unused_code|
+        score = minimax(unused_code,)
+        if (score > best_score)
+          best_score = score
+          cpu_guess = unused_code
+        end
+      end
+      return cpu_guess
     end
 
     def check_winner?

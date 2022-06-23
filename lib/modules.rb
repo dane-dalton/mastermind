@@ -2,9 +2,9 @@ module Board
 
   CODE_LENGTH = 4
 
-  TOTAL_COMBINATIONS = COLOR_OPTIONS.repeated_permutation(CODE_LENGTH)
-
   COLOR_OPTIONS = ["Red", "Blue", "Green", "Yellow", "Violet", "Orange"]
+
+  TOTAL_COMBINATIONS = COLOR_OPTIONS.repeated_permutation(CODE_LENGTH).to_a
 
   INDICATOR_PEGS = ["Black", "White"]
 
@@ -53,8 +53,8 @@ module Board
     end
   end
 
-  def minimax(position, depth, maximizing_player)
-    
+  def minimax(position, depth = 0, maximizing_player = 0)
+    return 1
   end
 end
 
