@@ -23,8 +23,8 @@ module Board
   end
 
   def colored_pegs (guess_array, code_array)
-    temp_guess = guess_array
-    temp_code = code_array
+    temp_guess = guess_array.clone
+    temp_code = code_array.clone
     temp_removed = 0
 
     #Check correct color and position
