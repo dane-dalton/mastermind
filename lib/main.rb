@@ -21,8 +21,8 @@ class Game
     @computer_player = Computer.new
     @code_breaker = nil
     @coder = nil
-    @possible_codes = TOTAL_COMBINATIONS.clone #Total possible codes = 1296
-    @unused_codes = TOTAL_COMBINATIONS.clone
+    @possible_codes = TOTAL_COMBINATIONS.dup #Total possible codes = 1296
+    @unused_codes = TOTAL_COMBINATIONS.dup
   end
 
   def play
@@ -31,7 +31,7 @@ class Game
     choose_role
     choose_code(self.coder)
     start_guesses
-    coder_winner unless check_winner?
+    coder_winner unless check_winner?(self.correct_counter)
   end
 
   #Starts the guessing period for the code breaker. Runs the set amount of rounds.
@@ -42,12 +42,16 @@ class Game
       self.guess_storage.push(self.guess)
       self.correct_storage.push(self.correct_counter)
       code_breaker_display(self.guess_storage, self.correct_storage) #from Board module
-      if check_winner?
+      if check_winner?(self.correct_counter)
         input = y_n("code breaker")
         play_again(input)
         break
       end
     end
+  end
+
+  def check_winner?(num_correct)
+    num_correct[INDICATOR_PEGS[0]] == 4
   end
 
   def self.invalid_input
@@ -96,12 +100,11 @@ class Game
     def set_human
       array = []
       get_human_array(array) #from Prompt module
-      return array.clone
+      return array.dup
     end
 
     #Computer takes random guesses for now
     def set_guess_computer(cpu_guess)
-      cpu_guess = []
       #First guess is always 1122
       if self.guess_storage == []
         cpu_guess = [COLOR_OPTIONS[0], COLOR_OPTIONS[0], COLOR_OPTIONS[1], COLOR_OPTIONS[1]]
@@ -110,7 +113,7 @@ class Game
       end
 
       #Remove all possible codes that would not yield the same response as the guess if the guess were the code
-      temp_correct_counter = self.correct_counter.clone
+      temp_correct_counter = self.correct_counter.dup
       self.possible_codes.each do |combo|
         colored_pegs(combo, cpu_guess)
         unless temp_correct_counter == self.correct_counter
@@ -121,17 +124,22 @@ class Game
       best_score = -(1.0/0.0)
 
       self.unused_codes.each do |unused_code|
-        score = minimax(unused_code,)
-        if (score > best_score)
+        score = minimax(unused_code)
+        if score > best_score
           best_score = score
           cpu_guess = unused_code
         end
       end
-      return cpu_guess
-    end
 
-    def check_winner?
-      self.correct_counter[INDICATOR_PEGS[0]] == 4
+      # self.unused_codes.each do |unused_code|
+      #   score = minimax(unused_code, 0, true)
+      #   if (score > best_score)
+      #     best_score = score
+      #     cpu_guess = unused_code
+      #     self.unused_codes.delete(cpu_guess)
+      #   end
+      # end
+      return cpu_guess
     end
 
     def coder_winner

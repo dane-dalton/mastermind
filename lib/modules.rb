@@ -23,8 +23,8 @@ module Board
   end
 
   def colored_pegs (guess_array, code_array)
-    temp_guess = guess_array.clone
-    temp_code = code_array.clone
+    temp_guess = guess_array.dup
+    temp_code = code_array.dup
     temp_removed = 0
 
     #Check correct color and position
@@ -53,8 +53,29 @@ module Board
     end
   end
 
-  def minimax(position, depth = 0, maximizing_player = 0)
-    return 1
+  def check_scores(num_correct)
+    colored_pegs()
+  end
+
+  def minimax(position)
+    result = check_winner?(self.correct_counter)
+    if result == true
+      return position
+    end
+    removed_codes_counter = 0
+    temp_correct_counter = self.correct_counter.dup
+    self.possible_codes.each do |combo|
+      colored_pegs(combo, position)
+      unless temp_correct_counter == self.correct_counter
+        removed_codes_counter += 1
+      end
+    end
+
+    #find the position with the most possible codes removed
+    max_eval = removed_codes_counter
+    evaluation = minimax(position)
+    max_eval = max(max_eval, evaluation)
+    return max_eval
   end
 end
 
