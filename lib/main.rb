@@ -7,7 +7,7 @@ class Game
 
   attr_reader :code_length
 
-  attr_accessor :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage, :possible_codes, :unused_codes
+  attr_accessor :code, :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage, :possible_codes, :unused_codes
 
   def initialize()
     @code = []
@@ -60,7 +60,7 @@ class Game
 
   private
 
-    attr_accessor :code, :guess, :rounds
+    attr_accessor :guess, :rounds
 
     def choose_role
       input = y_n("role")
@@ -99,8 +99,7 @@ class Game
     #Setting the code and guessing the code are similar, so this method fills an array and assigns it to either the code or the guess depending on the users role
     def set_human
       array = []
-      length = self.code.length
-      get_human_array(array, length) #from Prompt module
+      get_human_array(array, self.code.length) #from Prompt module
       return array.dup
     end
 
