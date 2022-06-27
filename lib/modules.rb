@@ -54,10 +54,12 @@ module Board
     end
   end
 
+  #Find the position with the smallest value for each of its possible scores given every pin combination
   def minimax(position, best_score)
     removed_storage = []
 
-    PEG_COMBINATIONS.each do |peg_combo|
+    #Since none correct is most likely the smallest number removed for each guess, I used a greedy approach and check the none correct value first incase there is pruning
+    PEG_COMBINATIONS.reverse.each do |peg_combo|
       removed_counter = 0
       self.possible_codes.each do |combo|
         colored_pegs(combo, position)
@@ -66,10 +68,9 @@ module Board
         end
       end
       removed_storage.push(removed_counter)
-      break if removed_counter < best_score
+      break if removed_counter < best_score #Prune codes that return a value lower than the current best score
     end
     score = removed_storage.min
-    #find the position with the most possible codes removed
     return score
   end
 end

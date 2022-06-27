@@ -38,7 +38,6 @@ class Game
   def start_guesses
     self.rounds.times do
       choose_guess(self.code_breaker)
-      p self.code
       colored_pegs(self.guess, self.code) #gets number correct
       self.guess_storage.push(self.guess)
       self.correct_storage.push(self.correct_counter)
@@ -113,6 +112,8 @@ class Game
         return cpu_guess
       end
 
+      #From here to the end of the method is my implementation of Donald Knuths Mastermind solution
+
       #Remove all possible codes that would not yield the same response as the guess if the guess were the code
       temp_correct_counter = self.correct_counter
       self.possible_codes.delete_if do |combo|
@@ -120,15 +121,14 @@ class Game
         !(temp_correct_counter == self.correct_counter)
       end
 
-
       best_score = -(1.0/0.0)
-
       self.unused_codes.each do |unused_code|
         score = minimax(unused_code, best_score)
         if score > best_score
           best_score = score
           cpu_guess = unused_code
-        elsif score == best_score && self.possible_codes.include?(unused_code) && !(self.possible_codes.include?(cpu_guess))
+        #If two scores have the same value, prioritize values in our possible answers since it itself could be an answer, then prioritize the lowest indexed answer
+        elsif score == best_score && self.possible_codes.include?(unused_code) && !(self.possible_codes.include?(cpu_guess)) 
           cpu_guess = unused_code
         end
       end
@@ -144,12 +144,10 @@ class Game
 
     def play_again(y_or_n)
       if y_or_n == "y"
-        game = Game.new
-        game.play
+        Game.new.play
       end
     end
 end
 
 
-game = Game.new
-game.play
+Game.new.play
