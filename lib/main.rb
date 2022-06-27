@@ -124,7 +124,7 @@ class Game
       best_score = -(1.0/0.0)
 
       self.unused_codes.each do |unused_code|
-        score = minimax(unused_code)
+        score = minimax(unused_code, best_score)
         if score > best_score
           best_score = score
           cpu_guess = unused_code

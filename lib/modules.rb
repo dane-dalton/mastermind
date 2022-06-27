@@ -54,7 +54,7 @@ module Board
     end
   end
 
-  def minimax(position)
+  def minimax(position, best_score)
     removed_storage = []
 
     PEG_COMBINATIONS.each do |peg_combo|
@@ -66,6 +66,7 @@ module Board
         end
       end
       removed_storage.push(removed_counter)
+      break if removed_counter < best_score
     end
     score = removed_storage.min
     #find the position with the most possible codes removed
