@@ -120,26 +120,21 @@ class Game
         !(temp_correct_counter == self.correct_counter)
       end
 
-      # best_score = -(1.0/0.0)
 
-      # possible_pegs = 
-      # self.unused_codes.each do |unused_code|
-      #   score = minimax(unused_code)
-      #   if score > best_score
-      #     best_score = score
-      #     cpu_guess = unused_code
-      #   end
-      # end
+      best_score = -(1.0/0.0)
 
-      # self.unused_codes.each do |unused_code|
-      #   score = minimax(unused_code, 0, true)
-      #   if (score > best_score)
-      #     best_score = score
-      #     cpu_guess = unused_code
-      #     self.unused_codes.delete(cpu_guess)
-      #   end
-      # end
-      return possible_codes[0]
+      self.unused_codes.each do |unused_code|
+        score = minimax(unused_code)
+        if score > best_score
+          best_score = score
+          cpu_guess = unused_code
+        elsif score == best_score && self.possible_codes.include?(unused_code) && !(self.possible_codes.include?(cpu_guess))
+          cpu_guess = unused_code
+        end
+      end
+
+      self.unused_codes.delete(cpu_guess)
+      return cpu_guess
     end
 
     def coder_winner

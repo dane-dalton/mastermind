@@ -8,8 +8,8 @@ module Board
 
   INDICATOR_PEGS = ["B", "W", ""]
 
-  PEG_COMBINATIONS = INDICATOR_PEGS.repeated_combination(CODE_LENGTH).to_a
-  PEG_COMBINATIONS = PEG_COMBINATIONS.map { |combo| combo.join }
+  combine_pegs = INDICATOR_PEGS.repeated_combination(CODE_LENGTH).to_a
+  PEG_COMBINATIONS = combine_pegs.map { |combo| combo.join }
 
   def code_breaker_display(guesses, pegs)
     puts "\n\n"
@@ -54,29 +54,22 @@ module Board
     end
   end
 
-  def check_scores(num_correct)
-    colored_pegs()
-  end
-
   def minimax(position)
-    result = check_winner?(self.correct_counter)
-    if result == true
-      return position
-    end
-    removed_codes_counter = 0
-    temp_correct_counter = self.correct_counter.dup
-    self.possible_codes.each do |combo|
-      colored_pegs(combo, position)
-      unless temp_correct_counter == self.correct_counter
-        removed_codes_counter += 1
-      end
-    end
+    removed_storage = []
 
+    PEG_COMBINATIONS.each do |peg_combo|
+      removed_counter = 0
+      self.possible_codes.each do |combo|
+        colored_pegs(combo, position)
+        unless peg_combo == self.correct_counter
+          removed_counter += 1
+        end
+      end
+      removed_storage.push(removed_counter)
+    end
+    score = removed_storage.min
     #find the position with the most possible codes removed
-    max_eval = removed_codes_counter
-    evaluation = minimax(position)
-    max_eval = max(max_eval, evaluation)
-    return max_eval
+    return score
   end
 end
 
