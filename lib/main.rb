@@ -26,7 +26,7 @@ class Game
   end
 
   def play
-    puts "\nWelcome to Mastermind! You'll be facing up against a robot."
+    puts "\nWelcome to Mastermind! You'll be facing up against a robot. It is a slow thinker when it is the code breaker, but it always comes out on top."
     @human_player.choose_name
     choose_role
     choose_code(self.coder)
