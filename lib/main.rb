@@ -7,7 +7,7 @@ class Game
 
   attr_reader :code_length
 
-  attr_accessor :code, :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage, :possible_codes, :unused_codes
+  attr_accessor :code, :guess, :rounds, :code_breaker, :coder, :guess_storage, :correct_counter, :correct_storage, :possible_codes, :unused_codes
 
   def initialize()
     @code = []
@@ -59,8 +59,6 @@ class Game
   end
 
   private
-
-    attr_accessor :guess, :rounds
 
     def choose_role
       input = y_n("role")
