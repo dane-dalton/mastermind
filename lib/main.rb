@@ -114,13 +114,11 @@ class Game
       end
 
       #Remove all possible codes that would not yield the same response as the guess if the guess were the code
-      # temp_correct_counter = self.correct_counter.dup
-      # self.possible_codes.each do |combo|
-      #   colored_pegs(combo, cpu_guess)
-      #   unless temp_correct_counter == self.correct_counter
-      #     self.possible_codes.delete(combo)
-      #   end
-      # end
+      temp_correct_counter = self.correct_counter
+      self.possible_codes.delete_if do |combo|
+        colored_pegs(combo, cpu_guess)
+        !(temp_correct_counter == self.correct_counter)
+      end
 
       # best_score = -(1.0/0.0)
 
@@ -141,7 +139,7 @@ class Game
       #     self.unused_codes.delete(cpu_guess)
       #   end
       # end
-      return cpu_guess
+      return possible_codes[0]
     end
 
     def coder_winner

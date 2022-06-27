@@ -6,7 +6,10 @@ module Board
 
   TOTAL_COMBINATIONS = COLOR_OPTIONS.repeated_permutation(CODE_LENGTH).to_a
 
-  INDICATOR_PEGS = ["B", "W"]
+  INDICATOR_PEGS = ["B", "W", ""]
+
+  PEG_COMBINATIONS = INDICATOR_PEGS.repeated_combination(CODE_LENGTH).to_a
+  PEG_COMBINATIONS = PEG_COMBINATIONS.map { |combo| combo.join }
 
   def code_breaker_display(guesses, pegs)
     puts "\n\n"
@@ -35,7 +38,6 @@ module Board
         temp_code.delete_at(i - temp_removed)
         temp_removed += 1
       end
-      p peg_obj
       peg_obj
     end
 
