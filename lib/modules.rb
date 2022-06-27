@@ -6,7 +6,7 @@ module Board
 
   TOTAL_COMBINATIONS = COLOR_OPTIONS.repeated_permutation(CODE_LENGTH).to_a
 
-  INDICATOR_PEGS = ["Black", "White"]
+  INDICATOR_PEGS = ["B", "W"]
 
   def code_breaker_display(guesses, pegs)
     puts "\n\n"
@@ -17,7 +17,7 @@ module Board
         print guess + " | "
       end
       round.each
-      print "#{pegs[i]}\n"
+      print "Correct Pegs: #{pegs[i]}\n"
     end
     puts "\n"
   end
@@ -28,15 +28,14 @@ module Board
     temp_removed = 0
 
     #Check correct color and position
-    self.correct_counter = code_array.each_with_index.reduce({}) do |peg_obj, (code_color, i)|
-      peg_obj[INDICATOR_PEGS[0]] ||= 0 #from Board module
-      peg_obj[INDICATOR_PEGS[1]] ||= 0
+    self.correct_counter = code_array.each_with_index.reduce("") do |peg_obj, (code_color, i)|
       if code_color == guess_array[i]
-        peg_obj[INDICATOR_PEGS[0]] += 1
+        peg_obj << INDICATOR_PEGS[0]
         temp_guess.delete_at(i - temp_removed)
         temp_code.delete_at(i - temp_removed)
         temp_removed += 1
       end
+      p peg_obj
       peg_obj
     end
 
@@ -44,8 +43,8 @@ module Board
     self.correct_counter = temp_code.each_with_index.reduce(self.correct_counter) do |peg_obj, (code_color, i)|
       temp_guess.each_with_index do |guess_color, j|
         if code_color == guess_color
-          peg_obj[INDICATOR_PEGS[1]] += 1
           temp_guess.delete_at(j)
+          peg_obj << INDICATOR_PEGS[1]
           break
         end
       end
