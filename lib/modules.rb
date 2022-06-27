@@ -102,11 +102,11 @@ module Prompts
     return input
   end
 
-  def get_human_array(array)
+  def get_human_array(array, length)
     self.code_length.times do
       invalid = true
       while invalid do 
-        unless self.code.length == code_length
+        unless length == code_length
           puts "\n#{@human_player.name}'s turn to create a code by selecting from the list of colors:"
         else
           puts "\nCurrent guess: #{array}"

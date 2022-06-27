@@ -1,5 +1,5 @@
 # Mastermind
-A game of mastermind written in Ruby and played in the console against a computer (AI to come).
+A game of mastermind written in Ruby and played in the command line against a computer. The computer uses Donald Knuths strategy to win every game in at least 5 guesses, and I use pruning to speed up the long run time.
 ## Rules
 The rules don't read well, but the game is quite simple. It is a lot like wordle if you are familiar.
 

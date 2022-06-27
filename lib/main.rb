@@ -99,7 +99,7 @@ class Game
     #Setting the code and guessing the code are similar, so this method fills an array and assigns it to either the code or the guess depending on the users role
     def set_human
       array = []
-      get_human_array(array) #from Prompt module
+      get_human_array(array, self.code.length) #from Prompt module
       return array.dup
     end
 
@@ -148,6 +148,5 @@ class Game
       end
     end
 end
-
 
 Game.new.play
